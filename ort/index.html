@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏠 PENTHOUSE 6.0 · SCHALTEN & WALTEN</title>
+
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: #0a0a0f;
+  color: #00ffff;
+  font-family: 'Consolas', 'Courier New', monospace;
+  overflow: hidden;
+  height: 100vh;
+  perspective: 1200px;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(10,10,18,0.92);
+  border-bottom: 2px solid #33ccff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+.header h1 { color: #33ccff; font-size: 14px; letter-spacing: 2px; }
+.header h1 span { color: #ffdd00; }
+.header .info { color: #6688aa; font-size: 9px; display: flex; gap: 10px; }
+.header .info span { color: #ffdd00; }
+.header .info .freq { color: #ff66ff; }
+
+#penthouse {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background: radial-gradient(ellipse at center, #0a0a1a, #000000);
+  overflow: hidden;
+}
+.panorama {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  max-height: 600px;
+  transform: rotateX(5deg) rotateY(0deg);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.floor {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) rotateX(90deg) translateZ(-160px);
+  width: 600px;
+  height: 600px;
+  background: repeating-conic-gradient(from 0deg at 50% 50%, #1a1a3a 0deg 10deg, #0a0a1a 10deg 20deg);
+  border-radius: 50%;
+  opacity: 0.25;
+  animation: floorSpin 40s linear infinite;
+  box-shadow: 0 0 80px rgba(51,204,255,0.08);
+}
+@keyframes floorSpin {
+  from { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(0deg); }
+  to { transform: translateX(-50%) rotateX(90deg) translateZ(-160px) rotate(360deg); }
+}
+.freq-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.freq-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  animation: freqRise linear infinite;
+}
+@keyframes freqRise {
+  0% { transform: translateY(100%) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100%) scale(1); opacity: 0; }
+}
+.axis-6d {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  border: 1px solid rgba(51,204,255,0.04);
+  animation: axisSpin 60s linear infinite;
+}
+.axis-6d .ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(51,204,255,0.05);
+}
+.axis-6d .ring.r1 { width: 80%; height: 80%; }
+.axis-6d .ring.r2 { width: 60%; height: 60%; }
+.axis-6d .ring.r3 { width: 40%; height: 40%; }
+.axis-6d .ring.r4 { width: 20%; height: 20%; border-color: rgba(255,221,0,0.1); }
+@keyframes axisSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.scanner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 280px;
+  border: 2px solid rgba(51,204,255,0.1);
+  border-radius: 50%;
+  animation: scannerPulse 3s ease-in-out infinite;
+}
+.scanner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border: 1px solid rgba(255,221,0,0.06);
+  border-radius: 50%;
+  animation: scannerPulse 2s ease-in-out infinite 0.5s;
+}
+.scanner::after {
+  content: '●';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffdd00;
+  font-size: 9px;
+  animation: scannerBlink 1s ease-in-out infinite;
+}
+@keyframes scannerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.25; }
+  50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.6; }
+}
+@keyframes scannerBlink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; text-shadow: 0 0 40px #ffdd00; }
+}
+.ort-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffdd00;
+  font-size: 36px;
+  text-shadow: 0 0 60px rgba(255,221,0,0.25);
+  animation: markerPulse 2s ease-in-out infinite;
+}
+@keyframes markerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+.tmp-rooms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+.tmp-room {
+  position: absolute;
+  padding: 3px 7px;
+  background: rgba(17,17,34,0.5);
+  border: 1px solid rgba(51,204,255,0.06);
+  border-radius: 4px;
+  font-size: 6px;
+  color: #6688aa;
+  backdrop-filter: blur(4px);
+  transition: all 0.4s;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+}
+.tmp-room:hover { border-color: #33ccff; color: #00ffff; transform: scale(1.12); box-shadow: 0 0 20px rgba(51,204,255,0.08); }
+.tmp-room.active { border-color: #ffdd00; color: #ffdd00; background: rgba(255,221,0,0.06); }
+.tmp-room.help { border-color: #88ff44; color: #88ff44; }
+.tmp-room.error { border-color: #ff4444; color: #ff4444; }
+
+#status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background: rgba(10,10,18,0.92);
+  border-top: 2px solid #2a2a3a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  font-size: 9px;
+  color: #6688aa;
+}
+#status .center { color: #33ccff; }
+#status .center span { color: #ff66ff; }
+#status .right span { color: #88ff44; }
+
+#controls {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  z-index: 1001;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 98%;
+}
+#controls button {
+  background: rgba(17,17,34,0.7);
+  color: #6688aa;
+  border: 1px solid #2a2a4a;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-family: 'Consolas', monospace;
+  font-size: 7px;
+  border-radius: 3px;
+  transition: all 0.3s;
+  backdrop-filter: blur(4px);
+}
+#controls button:hover { background: #1a1a3a; border-color: #66ccff; color: #00ffff; }
+#controls button.active { background: #1a2a4a; color: #00ff88; border-color: #00ff88; }
+#controls button.gold { color: #ffdd00; border-color: #554400; }
+#controls button.gold:hover { background: #2a1a00; border-color: #ffdd00; }
+#controls button.red { color: #ff4444; border-color: #442222; }
+#controls button.red:hover { background: #2a0a0a; border-color: #ff4444; }
+#controls button.green { color: #88ff44; border-color: #224422; }
+#controls button.green:hover { background: #0a2a0a; border-color: #88ff44; }
+#controls button.mxu { color: #ff66ff; border-color: #442244; }
+#controls button.mxu:hover { background: #2a0a2a; border-color: #ff66ff; }
+
+@media (max-width: 700px) {
+  .header h1 { font-size: 10px; }
+  .header .info { font-size: 7px; gap: 4px; }
+  .floor { width: 300px; height: 300px; }
+  .axis-6d { width: 220px; height: 220px; }
+  .scanner { width: 140px; height: 140px; }
+  .scanner::before { width: 70px; height: 70px; }
+  .ort-marker { font-size: 24px; }
+  .tmp-room { font-size: 5px; padding: 2px 4px; }
+  #controls button { font-size: 6px; padding: 2px 6px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏠 PENTHOUSE · <span>6.0</span> · SCHALTEN & WALTEN</h1>
+  <div class="info">
+    <span class="freq" id="freqDisplay">12e</span>
+    <span>6D · <span id="d5">HSF</span></span>
+    <span>RESPO · <span id="respoStatus">synthesis</span></span>
+    <span>MXU · <span id="mxuDisplay">SYNC</span></span>
+  </div>
+</div>
+
+<div id="penthouse">
+  <div class="panorama" id="panorama">
+    <div class="floor"></div>
+    <div class="freq-stream" id="freqStream"></div>
+    <div class="axis-6d"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div></div>
+    <div class="scanner" id="scannerEl"></div>
+    <div class="ort-marker">◉</div>
+    <div class="tmp-rooms" id="tmpRooms"></div>
+  </div>
+</div>
+
+<div id="controls">
+  <button class="gold" id="btnReset">⟲ RESET</button>
+  <button id="btnRotate" class="active">⟳ ROTATE</button>
+  <button id="btnFreq">📡 FREQ</button>
+  <button id="btnScan">🔍 SCAN</button>
+  <button class="green" id="btnHelp">🆘 HELP</button>
+  <button class="red" id="btnError">⚠️ ERROR</button>
+  <button id="btnSense">👁️ SENSE</button>
+  <button id="btnWraight">✅ WRAIGHT</button>
+  <button class="gold" id="btnCoach">🧑‍🏫 COACH</button>
+  <button id="btnTmp">🌀 TMP</button>
+  <button id="btnFull">🔮 FULL</button>
+  <button class="mxu" id="btnMxu">⚡ MXU</button>
+  <button class="gold" id="btnPenth">🏠 PENTHOUSE</button>
+</div>
+
+<div id="status">
+  <span>🧠 <span id="agentStatus">bereit</span></span>
+  <span class="center">◉ <span id="centerInfo">RESPO.synthesis · GEO.TRANS</span></span>
+  <span class="right">SCORE: <span id="scoreVal">0</span> · TMP: <span id="tmpVal">12e</span></span>
+</div>
+
+<script>
+// ============================================================
+// PENTHOUSE 6.0 · SCHALTEN & WALTEN
+// ============================================================
+
+// ===== STATE =====
+let state = {
+  rotate: true, freq: 12, scan: false, score: 0, angle: 0,
+  agent: 'bereit', wraight: '⏳', coach: 'bereit', mxu: 'SYNC'
+};
+
+// ===== DOM REFS =====
+const panorama = document.getElementById('panorama');
+const freqStream = document.getElementById('freqStream');
+const tmpRooms = document.getElementById('tmpRooms');
+const scannerEl = document.getElementById('scannerEl');
+
+// ===== TMP RÄUME =====
+const TMP_ROOMS = [
+  { id: "help.tmp", x: 8, y: 18, label: "🆘" },
+  { id: "error.tmp", x: 82, y: 22, label: "⚠️" },
+  { id: "sense.tmp", x: 42, y: 12, label: "👁️" },
+  { id: "wraight.tmp", x: 68, y: 72, label: "✅" },
+  { id: "coach.tmp", x: 22, y: 78, label: "🧑‍🏫" },
+  { id: "tmp.tmp", x: 52, y: 52, label: "🌀" },
+  { id: "push.tmp", x: 12, y: 48, label: "▶" },
+  { id: "flow.tmp", x: 78, y: 48, label: "~" },
+  { id: "spin.tmp", x: 48, y: 32, label: "⟳" },
+  { id: "root.tmp", x: 32, y: 62, label: "◈" }
+];
+
+function buildTmpRooms() {
+  tmpRooms.innerHTML = '';
+  TMP_ROOMS.forEach(room => {
+    const el = document.createElement('div');
+    el.className = 'tmp-room';
+    el.dataset.id = room.id;
+    el.style.left = room.x + '%';
+    el.style.top = room.y + '%';
+    el.textContent = room.label + ' ' + room.id;
+    el.onclick = () => {
+      state.score += 1;
+      document.getElementById('scoreVal').textContent = state.score;
+      el.classList.toggle('active');
+      const label = room.id.replace('.tmp','').toUpperCase();
+      document.getElementById('centerInfo').textContent = `📍 ${label} · aktiv`;
+    };
+    tmpRooms.appendChild(el);
+  });
+}
+
+// ===== FREQ PARTICLES =====
+function buildFreqParticles() {
+  freqStream.innerHTML = '';
+  const count = 18 + Math.floor(Math.random() * 12);
+  const colors = ['#33ccff', '#ffdd00', '#ff66ff', '#88ff44'];
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'freq-particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = (2 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    p.style.animationDuration = (3 + Math.random() * 3) + 's';
+    p.style.animationDelay = (Math.random() * 3) + 's';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.boxShadow = `0 0 ${8 + Math.random() * 15}px ${p.style.background}`;
+    freqStream.appendChild(p);
+  }
+}
+
+// ===== ROTATE =====
+let rotateInterval = null;
+function startRotate() {
+  if (rotateInterval) clearInterval(rotateInterval);
+  let angle = 0;
+  rotateInterval = setInterval(() => {
+    if (state.rotate) { angle += 0.25; panorama.style.transform = `rotateX(5deg) rotateY(${angle}deg)`; }
+  }, 50);
+}
+function toggleRotate() {
+  state.rotate = !state.rotate;
+  document.getElementById('btnRotate').classList.toggle('active');
+  document.getElementById('btnRotate').textContent = state.rotate ? '⟳ ROTATE' : '⏸ PAUSE';
+}
+
+// ===== SET FUNCTIONS =====
+function setAgentStatus(s) { state.agent = s; document.getElementById('agentStatus').textContent = s; }
+function setWraight(s) { state.wraight = s; document.getElementById('wraightStatus') ? document.getElementById('wraightStatus').textContent = s : null; }
+function setCoach(s) { state.coach = s; document.getElementById('coachStatus') ? document.getElementById('coachStatus').textContent = s : null; }
+function setCenterInfo(t) { document.getElementById('centerInfo').textContent = t; }
+function setRespoStatus(s) { document.getElementById('respoStatus').textContent = s; }
+
+// ===== HSF MODULES =====
+function runHelp() {
+  setAgentStatus('HELP'); setCenterInfo('🆘 HELP · Soforthilfe aktiv');
+  setRespoStatus('help');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="help.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#88ff44';
+  scannerEl.style.boxShadow = '0 0 40px rgba(136,255,68,0.2)';
+}
+function runError() {
+  setAgentStatus('ERROR'); setCenterInfo('⚠️ ERROR · Keine Fehler');
+  setRespoStatus('error');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="error.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ff4444';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,68,68,0.2)';
+}
+function runSense() {
+  const score = (0.6 + Math.random() * 0.4).toFixed(2);
+  setAgentStatus('SENSE'); setCenterInfo(`👁️ 7SENSE · ${score} · ${score > 0.7 ? 'klar' : 'unscharf'}`);
+  setRespoStatus('sense');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="sense.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
+}
+function runWraight() {
+  const erlaubt = Math.random() > 0.25;
+  setWraight(erlaubt ? '✅ GRÜN' : '⛔ ROT');
+  setAgentStatus('WRAIGHT');
+  setCenterInfo(`✅ WRAIGHT · ${erlaubt ? 'GRÜN – Zugang erlaubt' : 'ROT – Zugang blockiert'}`);
+  setRespoStatus('wraight');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="wraight.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = erlaubt ? '#88ff44' : '#ff4444';
+  scannerEl.style.boxShadow = erlaubt ? '0 0 40px rgba(136,255,68,0.2)' : '0 0 40px rgba(255,68,68,0.2)';
+  return erlaubt;
+}
+function runCoach() {
+  const erlaubt = runWraight();
+  if (!erlaubt) {
+    setCoach('blockiert'); setCenterInfo('🧑‍🏫 COACH blockiert · WRAIGHT ist ROT');
+    return;
+  }
+  setCoach('aktiv'); setAgentStatus('COACH');
+  setCenterInfo('🧑‍🏫 COACH · führend · ich werde nicht geführt');
+  setRespoStatus('coach');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="coach.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 40px rgba(255,221,0,0.2)';
+}
+function runTmp() {
+  setAgentStatus('TMP'); setCenterInfo('🌀 TMP · Temporäre Brücke · Durchfluss stabil');
+  setRespoStatus('tmp');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  document.querySelector('.tmp-room[data-id="tmp.tmp"]')?.classList.add('active');
+  scannerEl.style.borderColor = '#33ccff';
+  scannerEl.style.boxShadow = '0 0 40px rgba(51,204,255,0.2)';
+}
+function runFull() {
+  const erlaubt = runWraight();
+  setAgentStatus('FULL');
+  setCenterInfo(`🔮 VOLLSCHALTUNG · ${erlaubt ? '✅ System aktiv' : '⛔ System blockiert'}`);
+  setRespoStatus('full');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.add('active'));
+  scannerEl.style.borderColor = '#ffdd00';
+  scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.3)';
+  scannerEl.style.animation = 'scannerPulse 1s ease-in-out infinite';
+}
+
+// ===== MXU =====
+let mxuCycle = 0;
+const MXU_MODES = ['SYNC', 'OS', 'BOOT', 'CORE', 'META'];
+function runMxu() {
+  mxuCycle = (mxuCycle + 1) % MXU_MODES.length;
+  const mode = MXU_MODES[mxuCycle];
+  state.mxu = mode;
+  document.getElementById('mxuDisplay').textContent = mode;
+  setCenterInfo(`⚡ MXU · ${mode} · Achsen aktiv`);
+  setRespoStatus('mxu');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  const colors = { SYNC: '#88ff44', OS: '#ff4444', BOOT: '#ff8c00', CORE: '#00ccff', META: '#ff66ff' };
+  scannerEl.style.borderColor = colors[mode] || '#33ccff';
+  scannerEl.style.boxShadow = `0 0 40px ${colors[mode] || '#33ccff'}33`;
+}
+
+// ===== PENTHOUSE =====
+function goPenthouse() {
+  document.getElementById('btnPenth').classList.toggle('active');
+  document.querySelector('.ort-marker').style.animation = 'none';
+  setTimeout(() => {
+    document.querySelector('.ort-marker').style.animation = 'markerPulse 2s ease-in-out infinite';
+  }, 10);
+  setCenterInfo('🏠 PENTHOUSE · 360°');
+}
+
+// ===== RESET =====
+function runReset() {
+  state.score = 0; document.getElementById('scoreVal').textContent = '0';
+  setAgentStatus('bereit'); setWraight('⏳'); setCoach('bereit');
+  setCenterInfo('⟲ RESET · System zurückgesetzt');
+  setRespoStatus('synthesis');
+  document.querySelectorAll('.tmp-room').forEach(el => el.classList.remove('active'));
+  scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
+  scannerEl.style.boxShadow = 'none';
+  scannerEl.style.animation = 'scannerPulse 3s ease-in-out infinite';
+  state.mxu = 'SYNC';
+  document.getElementById('mxuDisplay').textContent = 'SYNC';
+}
+
+// ===== FREQ =====
+function toggleFreq() {
+  state.freq = state.freq === 12 ? 24 : 12;
+  document.getElementById('btnFreq').classList.toggle('active');
+  document.getElementById('freqDisplay').textContent = state.freq + 'e';
+  document.getElementById('tmpVal').textContent = state.freq + 'e';
+  buildFreqParticles();
+}
+
+// ===== SCAN =====
+function toggleScan() {
+  state.scan = !state.scan;
+  document.getElementById('btnScan').classList.toggle('active');
+  if (state.scan) {
+    scannerEl.style.borderColor = 'rgba(255,221,0,0.5)';
+    scannerEl.style.boxShadow = '0 0 60px rgba(255,221,0,0.15)';
+    document.getElementById('btnScan').textContent = '🔍 SCAN·ON';
+    setRespoStatus('scanning');
+    setCenterInfo('🔍 SCAN · aktiv');
+  } else {
+    scannerEl.style.borderColor = 'rgba(51,204,255,0.1)';
+    scannerEl.style.boxShadow = 'none';
+    document.getElementById('btnScan').textContent = '🔍 SCAN';
+    setRespoStatus('synthesis');
+    setCenterInfo('RESPO.synthesis · GEO.TRANS');
+  }
+}
+
+// ===== CONTROLS =====
+document.getElementById('btnReset').onclick = runReset;
+document.getElementById('btnRotate').onclick = toggleRotate;
+document.getElementById('btnFreq').onclick = toggleFreq;
+document.getElementById('btnScan').onclick = toggleScan;
+document.getElementById('btnHelp').onclick = runHelp;
+document.getElementById('btnError').onclick = runError;
+document.getElementById('btnSense').onclick = runSense;
+document.getElementById('btnWraight').onclick = runWraight;
+document.getElementById('btnCoach').onclick = runCoach;
+document.getElementById('btnTmp').onclick = runTmp;
+document.getElementById('btnFull').onclick = runFull;
+document.getElementById('btnMxu').onclick = runMxu;
+document.getElementById('btnPenth').onclick = goPenthouse;
+
+// ===== TASTATUR =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'r' || e.key === 'R') runReset();
+  if (e.key === ' ') { e.preventDefault(); toggleRotate(); }
+  if (e.key === 'f' || e.key === 'F') toggleFreq();
+  if (e.key === 's' || e.key === 'S') toggleScan();
+  if (e.key === 'h' || e.key === 'H') runHelp();
+  if (e.key === 'e' || e.key === 'E') runError();
+  if (e.key === 'w' || e.key === 'W') runWraight();
+  if (e.key === 'c' || e.key === 'C') runCoach();
+  if (e.key === 't' || e.key === 'T') runTmp();
+  if (e.key === 'f' || e.key === 'F') runFull();
+  if (e.key === 'm' || e.key === 'M') runMxu();
+  if (e.key === 'p' || e.key === 'P') goPenthouse();
+});
+
+// ===== SCORE AUTO =====
+function updateScore() {
+  state.score += 0.02;
+  document.getElementById('scoreVal').textContent = Math.floor(state.score);
+  requestAnimationFrame(updateScore);
+}
+
+// ===== INIT =====
+buildTmpRooms();
+buildFreqParticles();
+startRotate();
+updateScore();
+setCenterInfo('🏠 PENTHOUSE 6.0 · SCHALTEN & WALTEN · bereit');
+console.log('🏠 PENTHOUSE 6.0 · SCHALTEN & WALTEN · geladen');
+console.log('⌨️  h=HELP e=ERROR w=WRAIGHT c=COACH t=TMP f=FULL m=MXU');
+console.log('    Space=Rotate f=Freq s=Scan r=Reset p=Penthouse');
+</script>
+<script type="module">
+import { ORT } from "./boot.js";
+ORT.boot();
+</script>
+<div id="ort-nav"></div>
+<script type="module">
+import { ORT_NAV } from "../nav.js";
+ORT_NAV();
+</script>
+
+</body>
+</html>
