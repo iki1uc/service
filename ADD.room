@@ -1,10 +1,30 @@
-# ORT-SCORE (Stufe 2)
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ORT · ADD.room</title>
+<style>
+    body { background:#000; color:#0f0; font-family:monospace; padding:20px; }
+    h1 { color:#0f0; }
+    .calc { border:1px solid #0f0; padding:15px; margin-top:20px; }
+</style>
+</head>
+<body>
 
+<h1>ORT · SCORE (Stufe 2)</h1>
+
+<div class="calc">
+<pre>
 ORT_SCORE =
 (BEN * 0.2) +
 (ZOOM * 0.3) +
 (ORT * 0.5) +
 (5D + 6D)
+</pre>
+</div>
 
-# ORT kann keinen Gewinner bestimmen
-# Gewinner wird erst in HOME berechnet
+<p>ORT kann keinen Gewinner bestimmen.</p>
+<p>Der Gewinner wird erst in <b>HOME</b> berechnet.</p>
+
+</body>
+</html>
