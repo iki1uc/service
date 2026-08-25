@@ -1,27 +1,410 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>ORT · SERVICE</title>
-<script type="module">
-    import { ORT_MASTER } from "./ORT‑MASTER.js";
-    ORT_MASTER.boot();
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌀 ORT-ENGINE · ACHSE · ENGINE · ANTRIEB · MOTOR</title>
+
 <style>
-    body { background:#111; color:#0f0; font-family:monospace; padding:20px; }
-    h1 { color:#0f0; }
-    .nav { margin-top:20px; }
-    button { background:#000; color:#0f0; border:1px solid #0f0; padding:10px; margin-right:10px; }
+:root {
+    --bg: #0a0a12;
+    --fg: #0ff;
+    --gold: #ffd700;
+    --station: #ff6600;
+    --axiom2: #ff00ff;
+    --air: #00ccff;
+    --use: #00ff88;
+    --user: #ffd93d;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Consolas', monospace;
+    min-height: 100vh;
+    padding: 10px;
+}
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(10,10,20,0.7);
+    border: 1px solid rgba(255,170,0,0.05);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+}
+.header {
+    text-align: center;
+    border-bottom: 1px solid rgba(255,170,0,0.05);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+}
+.header h1 {
+    font-size: 28px;
+    background: linear-gradient(90deg, #ff6600, #ff00ff, #00ccff, #00ff88, #ffd93d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+}
+.header .sub {
+    color: #445555;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+.header .sub span { color: var(--gold); }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+@media (max-width: 1100px) { .grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+.panel {
+    background: rgba(10,10,20,0.4);
+    border: 1px solid rgba(255,255,255,0.02);
+    border-radius: 12px;
+    padding: 12px;
+}
+.panel h2 {
+    color: var(--gold);
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+}
+.panel button {
+    background: rgba(20,35,35,0.2);
+    color: #668888;
+    border: 1px solid rgba(255,255,255,0.02);
+    padding: 4px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 9px;
+    transition: all 0.3s;
+    margin: 2px;
+}
+.panel button:hover { background: rgba(40,80,70,0.08); color: #aaeedd; }
+.panel button.gold { color: var(--gold); border-color: rgba(255,170,0,0.05); }
+.panel button.station { color: var(--station); border-color: rgba(255,102,0,0.05); }
+.panel button.axiom2 { color: var(--axiom2); border-color: rgba(255,0,255,0.05); }
+.panel button.air { color: var(--air); border-color: rgba(0,204,255,0.05); }
+.panel button.use { color: var(--use); border-color: rgba(0,255,136,0.05); }
+.panel button.user { color: var(--user); border-color: rgba(255,217,61,0.05); }
+.panel button.red { color: #ff4444; border-color: rgba(255,68,68,0.05); }
+
+#output {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 60px;
+    font-size: 10px;
+    line-height: 1.4;
+    border: 1px solid rgba(255,255,255,0.02);
+    margin-top: 8px;
+    white-space: pre-wrap;
+    color: #88ddbb;
+    font-family: monospace;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.status {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 10px;
+    margin-top: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    font-size: 9px;
+    color: #445555;
+    border: 1px solid rgba(255,255,255,0.01);
+    flex-wrap: wrap;
+}
+.status span { color: #88ddbb; }
+
+.footer {
+    text-align: center;
+    margin-top: 12px;
+    padding: 10px;
+    color: #222;
+    font-size: 8px;
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(255,255,255,0.01);
+}
+.footer span { color: var(--gold); }
+
+.module-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 4px;
+    margin-top: 6px;
+}
+.module-item {
+    background: #0e0e1a;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+    font-size: 7px;
+    color: #666;
+}
+.module-item .name { color: var(--gold); font-weight: bold; }
+.module-item .status { color: var(--fg); font-size: 6px; }
+.module-item.active { border-color: var(--fg); background: #0f1a1a; }
 </style>
 </head>
 <body>
 
-<h1>ORT · SERVICE · INDEX</h1>
+<div class="container">
 
-<div id="ort-nav" class="nav"></div>
+<div class="header">
+    <h1>🌀 ORT-ENGINE · ACHSE · ENGINE · ANTRIEB · MOTOR</h1>
+    <div class="sub">STATION · AXIOM2 · AIR · use · user · <span>D5 · 12e · 360°</span></div>
+</div>
 
-<p>ORT‑MASTER ist aktiv.</p>
-<p>Router, Navigation, AXIOM2 und STATION wurden geladen.</p>
+<div class="grid">
 
+    <!-- ===== PANEL 1: STATION · ACHSE ===== -->
+    <div class="panel">
+        <h2>📍 STATION · ACHSEN-ENGINE (D5)</h2>
+        <button class="station" onclick="stationBoot()">▶ STATION BOOT</button>
+        <button class="station" onclick="stationRotate('W')">🔄 W → ?</button>
+        <button class="station" onclick="stationRotate('S')">🔄 S → ?</button>
+        <button class="station" onclick="stationRotate('A')">🔄 A → ?</button>
+
+        <div id="station-output" style="margin-top:6px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#88ddbb;min-height:50px;">
+            📍 STATION.axis · D5 · 9 Achsen · bereit
+        </div>
+    </div>
+
+    <!-- ===== PANEL 2: AXIOM2 · META ===== -->
+    <div class="panel">
+        <h2>🌀 AXIOM2 · META-LOGIK</h2>
+        <button class="axiom2" onclick="axiomBoot()">▶ AXIOM2 BOOT</button>
+        <button class="axiom2" onclick="axiomEvaluate(25)">📊 EVALUATE (25)</button>
+        <button class="axiom2" onclick="axiomEvaluate(15)">📊 EVALUATE (15)</button>
+        <button class="axiom2" onclick="axiomEvaluate(5)">📊 EVALUATE (5)</button>
+
+        <div id="axiom-output" style="margin-top:6px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#88ddbb;min-height:50px;">
+            🌀 AXIOM2 · Meta-Logik · bereit
+        </div>
+    </div>
+
+    <!-- ===== PANEL 3: AIR · use · user ===== -->
+    <div class="panel">
+        <h2>🌪️ AIR · use · user</h2>
+        <button class="air" onclick="airBoot()">🌪️ AIR BOOT</button>
+        <button class="use" onclick="useToggle()">🔧 USE TOGGLE</button>
+        <button class="user" onclick="userSet()">👤 USER SET</button>
+
+        <div id="air-output" style="margin-top:6px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#88ddbb;min-height:50px;">
+            🌪️ AIR whrl over · 🔧 use · 👤 user · bereit
+        </div>
+    </div>
+
+</div>
+
+<div class="grid" style="margin-top:10px;">
+
+    <!-- ===== PANEL 4: ORT-ENGINE STATUS ===== -->
+    <div class="panel" style="grid-column:1/4;">
+        <h2>📊 ORT-ENGINE · STATUS</h2>
+        <div class="module-grid" id="module-grid">
+            <div class="module-item"><div class="name">STATION</div><div class="status">⏳</div></div>
+            <div class="module-item"><div class="name">AXIOM2</div><div class="status">⏳</div></div>
+            <div class="module-item"><div class="name">AIR</div><div class="status">⏳</div></div>
+            <div class="module-item"><div class="name">use</div><div class="status">⏳</div></div>
+            <div class="module-item"><div class="name">user</div><div class="status">⏳</div></div>
+        </div>
+        <button class="gold" onclick="engineBoot()">⚡ ENGINE BOOT ALL</button>
+        <button class="red" onclick="engineReset()">⟲ ENGINE RESET</button>
+
+        <div id="engine-output" style="margin-top:6px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;font-size:11px;color:#88ddbb;min-height:50px;">
+            ⚡ ORT-ENGINE · bereit · Drücke BOOT ALL
+        </div>
+    </div>
+
+</div>
+
+<div class="status">
+    <span>📍 STATION: <span id="status-station">⏳</span></span>
+    <span>🌀 AXIOM2: <span id="status-axiom">⏳</span></span>
+    <span>🌪️ AIR: <span id="status-air">⏳</span></span>
+    <span>🔧 use: <span id="status-use">⏳</span></span>
+    <span>👤 user: <span id="status-user">⏳</span></span>
+</div>
+
+<div class="footer"><span>🌀</span> ORT-ENGINE · ACHSE · ENGINE · ANTRIEB · MOTOR · <span>wieimmer4u</span></div>
+
+</div>
+
+<script>
+// ============================================================
+// ORT-ENGINE · DASHBOARD
+// ============================================================
+
+// ─── STATE ────────────────────────────────────────────────────
+const state = {
+    station: 'inaktiv',
+    axiom2: 'inaktiv',
+    air: 'inaktiv',
+    use: false,
+    user: null,
+    achsen: ['W', 'S', 'A', 'D', 'Q', 'R', 'Y', 'C', 'X']
+};
+
+// ─── DOM UPDATES ────────────────────────────────────────────
+function updateStatus() {
+    document.getElementById('status-station').textContent = state.station === 'aktiv' ? '✅ aktiv' : '⏳ inaktiv';
+    document.getElementById('status-axiom').textContent = state.axiom2 === 'aktiv' ? '✅ aktiv' : '⏳ inaktiv';
+    document.getElementById('status-air').textContent = state.air === 'aktiv' ? '✅ aktiv' : '⏳ inaktiv';
+    document.getElementById('status-use').textContent = state.use ? '✅ aktiv' : '⏳ inaktiv';
+    document.getElementById('status-user').textContent = state.user ? '✅ ' + state.user : '⏳ kein User';
+}
+
+function log(msg, type = 'ok') {
+    const output = document.getElementById('engine-output');
+    const time = new Date().toLocaleTimeString();
+    output.textContent = `[${time}] ${msg}`;
+}
+
+// ─── STATION ──────────────────────────────────────────────────
+function stationBoot() {
+    state.station = 'aktiv';
+    document.getElementById('station-output').textContent =
+        '📍 STATION.axis · D5-Matrix aktiviert\n' +
+        'Achsen: W S A D Q R Y C X\n' +
+        'Frequenz: 12e · Sequenz: 360°';
+    updateStatus();
+    log('📍 STATION.axis aktiviert', 'station');
+}
+
+function stationRotate(von) {
+    if (state.station !== 'aktiv') {
+        document.getElementById('station-output').textContent = '⚠️ STATION nicht aktiv – bitte zuerst booten';
+        return;
+    }
+    const idx = state.achsen.indexOf(von);
+    if (idx === -1) {
+        document.getElementById('station-output').textContent = `❌ Achse ${von} nicht gefunden`;
+        return;
+    }
+    const nach = state.achsen[(idx + 1) % state.achsen.length];
+    document.getElementById('station-output').textContent =
+        `🔄 STATION.axis: ${von} → ${nach}\n` +
+        `Position: ${idx+1}/${state.achsen.length}\n` +
+        `Nächste: ${state.achsen[(idx+2) % state.achsen.length]}`;
+    log(`🔄 ${von} → ${nach}`, 'station');
+}
+
+// ─── AXIOM2 ──────────────────────────────────────────────────
+function axiomBoot() {
+    state.axiom2 = 'aktiv';
+    document.getElementById('axiom-output').textContent =
+        '🌀 AXIOM2 · Meta-Logik aktiviert\n' +
+        'Axiom: allxall · ANKER-Tech · Energie-Kugel\n' +
+        'Score: 0 · Decision: —';
+    updateStatus();
+    log('🌀 AXIOM2 aktiviert', 'axiom2');
+}
+
+function axiomEvaluate(energie) {
+    if (state.axiom2 !== 'aktiv') {
+        document.getElementById('axiom-output').textContent = '⚠️ AXIOM2 nicht aktiv – bitte zuerst booten';
+        return;
+    }
+    const score = energie * 0.618;
+    let decision;
+    if (score > 20) decision = 'GÜLTIG';
+    else if (score > 10) decision = 'MÖGLICH';
+    else decision = 'UNSICHER';
+    document.getElementById('axiom-output').textContent =
+        `📊 AXIOM2 · EVALUATE\n` +
+        `Energie: ${energie}\n` +
+        `Score: ${score.toFixed(2)}\n` +
+        `Decision: ${decision}`;
+    log(`📊 Score=${score.toFixed(2)} · ${decision}`, 'axiom2');
+}
+
+// ─── AIR · use · user ────────────────────────────────────────
+function airBoot() {
+    state.air = 'aktiv';
+    document.getElementById('air-output').textContent =
+        '🌪️ AIR whrl over · Oszillation aktiviert\n' +
+        '🌀 Rotation: 360° · Frequenz: 12e\n' +
+        '🔧 use: ' + (state.use ? 'aktiv' : 'inaktiv') + '\n' +
+        '👤 user: ' + (state.user || '—');
+    updateStatus();
+    log('🌪️ AIR whrl over aktiviert', 'air');
+}
+
+function useToggle() {
+    state.use = !state.use;
+    document.getElementById('air-output').textContent =
+        '🔧 use: ' + (state.use ? 'aktiv' : 'inaktiv') + '\n' +
+        '🌪️ AIR: ' + (state.air === 'aktiv' ? 'aktiv' : 'inaktiv') + '\n' +
+        '👤 user: ' + (state.user || '—');
+    updateStatus();
+    log(`🔧 use ${state.use ? 'aktiviert' : 'deaktiviert'}`, 'use');
+}
+
+function userSet() {
+    const names = ['NOAH', 'EVOMIND', 'ATLANTIS', 'EVOCITY', 'Ridvan'];
+    state.user = names[Math.floor(Math.random() * names.length)];
+    document.getElementById('air-output').textContent =
+        `👤 user: ${state.user}\n` +
+        '🔧 use: ' + (state.use ? 'aktiv' : 'inaktiv') + '\n' +
+        '🌪️ AIR: ' + (state.air === 'aktiv' ? 'aktiv' : 'inaktiv');
+    updateStatus();
+    log(`👤 user: ${state.user}`, 'user');
+}
+
+// ─── ENGINE ──────────────────────────────────────────────────
+function engineBoot() {
+    stationBoot();
+    setTimeout(axiomBoot, 300);
+    setTimeout(airBoot, 600);
+    setTimeout(useToggle, 900);
+    setTimeout(() => userSet(), 1200);
+    log('⚡ ORT-ENGINE · ALLE MODULE BOOTEN', 'gold');
+}
+
+function engineReset() {
+    state.station = 'inaktiv';
+    state.axiom2 = 'inaktiv';
+    state.air = 'inaktiv';
+    state.use = false;
+    state.user = null;
+    document.getElementById('station-output').textContent = '📍 STATION.axis · reset';
+    document.getElementById('axiom-output').textContent = '🌀 AXIOM2 · reset';
+    document.getElementById('air-output').textContent = '🌪️ AIR · reset · 🔧 use · 👤 user';
+    updateStatus();
+    log('⟲ ORT-ENGINE zurückgesetzt', 'red');
+}
+
+// ─── TASTATUR ──────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+    if (e.key === '1') stationBoot();
+    if (e.key === '2') axiomBoot();
+    if (e.key === '3') airBoot();
+    if (e.key === '4') useToggle();
+    if (e.key === '5') userSet();
+    if (e.key === '0') engineBoot();
+    if (e.key === '9') engineReset();
+    if (e.key === 'w') stationRotate('W');
+    if (e.key === 's') stationRotate('S');
+    if (e.key === 'a') stationRotate('A');
+    if (e.key === 'd') stationRotate('D');
+});
+
+// ─── INIT ────────────────────────────────────────────────────
+log('🌀 ORT-ENGINE · ACHSE · ENGINE · ANTRIEB · MOTOR geladen', 'gold');
+console.log('⌨️  1=STATION  2=AXIOM2  3=AIR  4=use  5=user  0=BOOT ALL  9=RESET');
+console.log('    w/S/A/D = Achsen rotieren');
+updateStatus();
+</script>
 </body>
 </html>
